@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent-pom</artifactId>
+        <groupId>org.ow2.chameleon</groupId>
+        <version>0.3.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>u-core</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <dependencies>
+       <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>1.6.1</version>
+       </dependency>
+       <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-classic</artifactId>
+         <version>0.9.24</version>
+       </dependency>
+       <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-core</artifactId>
+         <version>0.9.24</version>
+       </dependency>
+     <dependency>
+      <groupId>de.kalpatec.pojosr</groupId>
+      <artifactId>framework</artifactId>
+      <version>0.1.4</version>
+    </dependency>
+
+       <!-- Core bundles Set the scope to provided to avoid adding them to the
+         classpath -->
+
+       <dependency>
+         <groupId>org.osgi</groupId>
+         <artifactId>org.osgi.compendium</artifactId>
+         <version>4.2.0</version>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.fileinstall</artifactId>
+         <version>3.1.10</version>
+         <scope>provided</scope>
+       </dependency>
+
+       <!-- Felix Shell -->
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.shell</artifactId>
+         <version>1.4.2</version>
+         <scope>provided</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.shell.tui</artifactId>
+         <version>1.4.1</version>
+         <scope>provided</scope>
+       </dependency>
+
+       <!-- Gogo -->
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.gogo.command</artifactId>
+         <version>0.8.0</version>
+         <scope>provided</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.gogo.runtime</artifactId>
+         <version>0.8.0</version>
+         <scope>provided</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.gogo.shell</artifactId>
+         <version>0.8.0</version>
+         <scope>provided</scope>
+       </dependency>
+
+       <!-- iPOJO -->
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.ipojo</artifactId>
+         <version>1.8.0</version>
+         <scope>provided</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.ipojo.arch</artifactId>
+         <version>1.6.0</version>
+         <scope>provided</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.ipojo.arch.gogo</artifactId>
+         <version>1.0.1</version>
+         <scope>provided</scope>
+       </dependency>
+
+       <!--Config Admin -->
+       <dependency>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>org.apache.felix.configadmin</artifactId>
+         <version>1.2.8</version>
+         <scope>provided</scope>
+       </dependency>
+     </dependencies>
+
+    <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${project.basedir}</directory>
+              <includes>
+                <include>felix-cache</include>
+                <include>chameleon-cache</include>
+                <include>target</include>
+                <include>log</include>
+                <include>deploy</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>copy-scripts</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/scripts</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/scripts</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeTransitive>true</excludeTransitive>
+              <includeScope>compile</includeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    <plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <executions>
+      <execution>
+        <id>make-assemblies</id>
+        <phase>package</phase>
+        <goals>
+          <goal>single</goal>
+        </goals>
+        <configuration>
+          <tarLongFileMode>gnu</tarLongFileMode>
+          <descriptors>
+            <descriptor>src/main/assembly/distribution-gogo.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </execution>
+    </executions>
+  </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rat-maven-plugin</artifactId>
+        <configuration>
+          <excludeSubProjects>false</excludeSubProjects>
+          <useEclipseDefaultExcludes>true</useEclipseDefaultExcludes>
+          <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
+          <excludes>
+            <param>doc/*</param>
+            <param>maven-eclipse.xml</param>
+            <param>.checkstyle</param>
+            <param>.externalToolBuilders/*</param>
+            <param>LICENSE.*</param>
+            <param>src/test/resources/**</param>
+            <param>src/main/resources/**</param>
+            <param>log/*</param>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <inherited>true</inherited>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>log*</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
