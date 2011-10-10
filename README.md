@@ -24,7 +24,9 @@ Building and running
 * Running the web distribution
 
     cd web-distribution/target/chameleon
+
     sh chameleon-start.sh --debug
+
     // ... you get the Gogo shell
 
 
